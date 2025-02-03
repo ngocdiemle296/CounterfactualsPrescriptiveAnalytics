@@ -11,3 +11,17 @@ This paper leverages counterfactual generation techniques to formulate recommend
 ## Framework
 <img width="839" alt="Counterfactuals_framework" src="https://github.com/user-attachments/assets/8df6ae27-c826-4dbd-92fd-1d4cc7eb4e2a" class="center"/>
 
+## Installation
+**Dependencies**
+This implementation requires the following Python libraries:
+```python
+pip install pandas numpy catboost dice_ml
+```
+
+## Usage
+1. Preprocess Event Logs
+2. Train the Total Time Oracle model
+3. Generate Counterfactual-based recommendations
+
+## License
+This project is licensed under the MIT License.
