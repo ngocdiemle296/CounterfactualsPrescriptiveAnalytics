@@ -1,4 +1,4 @@
-# Counterfactual-Based Prescriptive Process Analytics
+# Counterfactual-based Prescriptive Process Analytics
 
 This repository contains the implementation of the counterfactual-based framework for prescriptive process analytics, as described in our paper **Leveraging on Counterfactuals for Prescriptive Process Analytics**.
 
