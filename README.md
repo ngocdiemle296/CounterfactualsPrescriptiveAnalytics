@@ -13,6 +13,7 @@ This paper leverages counterfactual generation techniques to formulate recommend
 
 ## Installation
 **Dependencies**
+
 This implementation requires the following Python libraries:
 ```python
 pip install pandas numpy catboost dice_ml
