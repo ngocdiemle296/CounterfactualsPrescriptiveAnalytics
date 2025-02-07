@@ -9,7 +9,8 @@ Current state-of-the-art techniques conversely adopt a sequential approach that 
 This paper leverages counterfactual generation techniques to formulate recommendations. Counterfactual-based methods offer innovative strategies that efficiently converge to highly effective interventions. Experimental evaluations conducted on several real-world event logs demonstrate that our counterfactual-based technique outperforms a baseline approach in which the best activity is chosen and then assigned to one of the suitable resources.
 
 ## Framework
-<img width="839" alt="Counterfactuals_framework" src="https://github.com/user-attachments/assets/8df6ae27-c826-4dbd-92fd-1d4cc7eb4e2a" class="center"/>
+<img width="1142" alt="Counterfactuals_framework" src="https://github.com/user-attachments/assets/46cedc98-6d95-4c87-ba4d-0998383a5e84" />
+
 
 ## Installation
 **Dependencies**
