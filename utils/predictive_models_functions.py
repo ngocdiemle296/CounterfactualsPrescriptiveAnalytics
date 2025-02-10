@@ -3,13 +3,12 @@ import numpy as np
 import joblib
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import r2_score
-
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 import catboost
-from catboost import CatBoostRegressor, Pool, cv
-
+from catboost import CatBoostRegressor
+import argparse
 
 SECONDS_TO_HOURS = 1/(60 * 60)
 SECONDS_TO_DAYS = 1/(60 * 60 * 24)
@@ -85,4 +84,3 @@ def train_ml_model(train_data, test_data, case_id_name, outcome_name, columns_to
     print('Mean Absolute Error: {} days'.format(mae*SECONDS_TO_DAYS))
 
     joblib.dump(catboost_pipeline, './catboost_time_' + case_study + '.joblib') # Save models
-
