@@ -22,9 +22,11 @@ pip install pandas numpy catboost dice_ml
 ```
 
 ## Usage
-1. Preprocess Event Logs
+1. Preprocessing Event Logs
 2. Train the Total Time Oracle model
 3. Generate Counterfactual-based recommendations
+```python
+python run_experiment.py --case_study "bac" --reduced_threshold 0.5 --num_cfes 100
 
 ## License
 This project is licensed under the MIT License.
