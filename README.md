@@ -25,6 +25,7 @@ pip install pandas numpy catboost dice_ml
 1. Preprocessing Event Logs
 2. Train the Total Time Oracle model
 3. Generate Counterfactual-based recommendations
+   Run:
 ```python
 python run_experiment.py --case_study "bac" --reduced_threshold 0.5 --num_cfes 100
 ```
