@@ -27,6 +27,7 @@ pip install pandas numpy catboost dice_ml
 3. Generate Counterfactual-based recommendations
 ```python
 python run_experiment.py --case_study "bac" --reduced_threshold 0.5 --num_cfes 100
+```
 
 ## License
 This project is licensed under the MIT License.
