@@ -89,8 +89,6 @@ def range_res(res_normal, next_possible_activities):
         del list_res
     return list(set(new_list))
 
-# Function to evaluate a single query (USING TRANSITION SYSTEM)
-# Returning number of valid CFEs, new df with valid CFEs,
 def evaluate_single_query_results(cfe_single_query, res_normal): 
     """
     Validating the results of CFEs by checking the compatibility

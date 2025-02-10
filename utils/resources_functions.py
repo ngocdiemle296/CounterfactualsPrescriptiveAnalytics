@@ -35,8 +35,18 @@ def finding_ids_with_loop(trace_ids, df, case_id_name, activity_column_name):
     return ids_with_loop
 
 def act_with_res(df, activity_column_name, resource_column_name):
-    # Return list of resources performing activities in event log
-    # Output: {act_1: [res_1], act_2: [res_2]}
+    """
+    Generates a dictionary mapping each unique activity to a list of unique resources associated with it.
+    
+    Parameters:
+        df (pandas.DataFrame): The DataFrame containing the data.
+        activity_column_name (str): The name of the column containing activity names.
+        resource_column_name (str): The name of the column containing resource names.
+        
+    Returns:
+        dict: A dictionary where keys are unique activities and values are lists of unique resources associated with each activity.
+    """
+    
     list_activities = df[activity_column_name].unique()
     result = {}
     for act in list_activities:
@@ -47,8 +57,21 @@ def act_with_res(df, activity_column_name, resource_column_name):
     return result
 
 def res_freq(df, lst_activities, list_act_res, activity_column_name, resource_column_name):
-    # Counting resource frequency performing list of activities
-    # Output: {act: {res: freq}}
+    """
+    Calculate the frequency of resources performing a list of activities.
+
+    Parameters:
+        df (pd.DataFrame): The dataframe containing the activity and resource data.
+        lst_activities (list): A list of activities to consider.
+        list_act_res (dict): A dictionary where keys are activities and values are lists of resources.
+        activity_column_name (str): The name of the column in the dataframe that contains activity names.
+        resource_column_name (str): The name of the column in the dataframe that contains resource names.
+
+    Returns:
+        dict: A nested dictionary where the keys are activities and the values are dictionaries.
+              These inner dictionaries have resources as keys and their corresponding frequencies as values,
+              sorted in descending order of frequency.
+    """
     res_freq = {}
     for act in lst_activities:
         lst_res = list_act_res[act]
@@ -60,10 +83,23 @@ def res_freq(df, lst_activities, list_act_res, activity_column_name, resource_co
     return res_freq
 
 def filter_res(act_res_freq, list_activities, filter_rate):
-    # Filter resources based on contribution
-    # Return list of resources have lower performance based on the filter rate
-    # Requirement: "act_res_freq" has to order in DESCENDING order
-    # Output: {act: [res_to_remove]}
+    """
+    Filters resources based on their contribution to activities and returns a list of resources 
+    that have lower performance based on the specified filter rate.
+
+    Parameters:
+    act_res_freq (dict): A dictionary where keys are activities and values are dictionaries 
+                         of resources with their corresponding frequencies. The dictionary 
+                         should be ordered in descending order of frequencies.
+    list_activities (list): A list of activities to be considered for filtering.
+    filter_rate (float): A threshold rate (between 0 and 1) used to determine which resources 
+                         to filter out based on their cumulative contribution.
+
+    Returns:
+    dict: A dictionary where keys are activities and values are lists of resources to be removed 
+          based on the filter rate.
+    """
+
     res_to_remove = {}
     for act in list_activities:
         sum_value = sum(act_res_freq[act].values()) 
@@ -80,6 +116,18 @@ def filter_res(act_res_freq, list_activities, filter_rate):
     return res_to_remove
 
 def find_normal_res(list_activities, list_act_res, res_to_remove):
+    """
+    Finds the normal resources for each activity by removing infrequent resources.
+    
+    Parameters:
+        list_activities (list): A list of activities.
+        list_act_res (dict): A dictionary where keys are activities and values are lists of resources associated with those activities.
+        res_to_remove (dict): A dictionary where keys are activities and values are lists of resources to be removed from the corresponding activity's resources.
+    
+    Returns:
+        dict: A dictionary where keys are activities and values are lists of resources after removing infrequent resources.
+    """
+
     result = {}
     for act in list_activities:
         result[act] = list(np.setdiff1d(list_act_res[act], res_to_remove[act])) #R\R-
