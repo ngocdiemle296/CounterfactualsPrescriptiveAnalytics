@@ -13,17 +13,13 @@ from utils.resources_functions import finding_ids_with_loop, act_with_res, res_f
 
 def create_DiCE_model(dataframe, continuous_features, outcome_name, dice_method, predictive_model, case_id_name, start_date_name, end_date_name):
     ## Create DiCE model
-    # For BAC
-    data_for_dice = dataframe.drop([case_id_name, "time:timestamp", "start:timestamp", "remaining_time", "START_DATE"], axis =1)
-    # # For BPI17
-    # data_for_dice = dataframe.drop([case_id_name, start_date_name, end_date_name, "remaining_time"], axis =1)
-    
+    data_for_dice = dataframe.drop([case_id_name, start_date_name, end_date_name, "remaining_time"], axis =1)
     data_model = dice_ml.Data(dataframe=data_for_dice,
                               continuous_features=continuous_features,
                               outcome_name=outcome_name)
     
     ml_backend = dice_ml.Model(model=predictive_model, backend="sklearn", model_type='regressor')
-    method = dice_method  # random, genetic, kdtree
+    method = dice_method  
     explainer = Dice(data_model, ml_backend, method=method) 
     return explainer
 
@@ -40,9 +36,12 @@ def filtering_resources_for_dice(train_data, activity_column_name, resource_colu
     res_normal = find_normal_res(list_activities, list_act_res, res_to_remove)
     return res_normal
 
-# Function to generate recommendations using DiCE for a single query 
-# Return 0 when NO recommendation has found
+
 def CFE_for_a_single_query(explainer, query_instance, y_predicted, REDUCED_KPI_TIME, total_CFs, list_next_activity, range_resources, cols_to_vary):
+    """
+    Generates a list of Counterfactual examples (CFEs) for a query instance
+    If no recommendations has found returns 0
+    """
     total_time_predicted = y_predicted
     total_time_upper_bound = int(total_time_predicted * REDUCED_KPI_TIME) 
 
@@ -58,8 +57,9 @@ def CFE_for_a_single_query(explainer, query_instance, y_predicted, REDUCED_KPI_T
     return cfe
 
 def next_possible_activities(trace_history, transition_graph, WINDOW_SIZE):
-    # Extract all next possible activities based on transition graph and WINDOW_SIZE
-    # Outcome: List possible next activities
+    """
+    Returns the list of possible next activities based on the transition graph and the trace history.
+    """
     n = len(trace_history)
     pos_acts = []
     if  n <= WINDOW_SIZE:
@@ -92,6 +92,19 @@ def range_res(res_normal, next_possible_activities):
 # Function to evaluate a single query (USING TRANSITION SYSTEM)
 # Returning number of valid CFEs, new df with valid CFEs,
 def evaluate_single_query_results(cfe_single_query, res_normal): 
+    """
+    Validating the results of CFEs by checking the compatibility
+    of the next activities and resources.
+    
+    Parameters:
+        cfe_single_query (object): An object containing the counterfactual examples generated for a single query.
+        res_normal (dict): A dictionary where keys are activities and values are lists of compatible resources.
+    
+    Returns:
+        tuple: A tuple containing:
+            - int: The number of valid counterfactual examples.
+            - DataFrame: A DataFrame of the valid counterfactual examples.
+    """
     # Extracting only generated counterfactual examples
     cfe_single_query_df = cfe_single_query.cf_examples_list[0].final_cfs_df
 
@@ -108,6 +121,9 @@ def evaluate_single_query_results(cfe_single_query, res_normal):
         return len(valid_idx), cfe_single_query_df.iloc[valid_idx].reset_index(drop=True)
     
 def dice_recommendations(train_data, test_log, test_data, threshold, predictive_model, continuous_features, dice_method, REDUCED_KPI_TIME, TOTAL_CFS, result_df, WINDOW_SIZE, cols_to_vary, case_id_name, activity_column_name, resource_column_name, outcome_name, start_date_name, end_date_name, time_limit):
+    """
+    Generate DiCE recommendations for counterfactual explanations in prescriptive analytics.
+    """
 
     test_log_ids = test_log[case_id_name].unique()
     print("Filtering resources...")
@@ -136,11 +152,8 @@ def dice_recommendations(train_data, test_log, test_data, threshold, predictive_
         true_outcome = current_execution[outcome_name].values[0]
         result_df['init_next_activity'][i] = next_activity
         result_df['true_outcome'][i] = true_outcome
-        # # For BPI17
-        # query_instance = current_execution.drop([case_id_name, outcome_name, start_date_name, end_date_name, "remaining_time"], axis = 1)
         
-        # For BAC
-        query_instance = current_execution.drop([case_id_name, outcome_name, start_date_name, end_date_name, "remaining_time", "START_DATE", "start_timestamp", "end_timestamp"], axis = 1)
+        query_instance = current_execution.drop([case_id_name, outcome_name, start_date_name, end_date_name, "remaining_time"], axis = 1)
 
         predicted_time =  int(predictive_model.predict(query_instance)[0])
         result_df['predicted_outcome'][i] = predicted_time

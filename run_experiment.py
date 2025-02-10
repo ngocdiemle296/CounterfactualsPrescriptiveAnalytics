@@ -15,7 +15,7 @@ def load_case_study(case_study):
 
 def get_case_study_features(case_study):
     data_path = f"./case_studies/{case_study}/"
-    predictive_model = joblib.load(data_path + "catboost_time.joblib")
+    predictive_model = joblib.load(data_path + "catboost_time_" + f"{case_study}.joblib")
     case_id_name, activity_column_name, resource_column_name, continuous_features = get_features(case_study)
     return predictive_model, case_id_name, activity_column_name, resource_column_name, continuous_features
 

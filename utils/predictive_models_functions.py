@@ -16,7 +16,18 @@ SECONDS_TO_DAYS = 1/(60 * 60 * 24)
 
 def prepare_df_for_ml(df, case_id_name, outcome_name, columns_to_remove=None):
     """
-    :param str outcome_name: name of the target column.
+    Prepares a DataFrame for machine learning by removing specified columns and separating features and target variable.
+    
+    Parameters:
+        df (pandas.DataFrame): The input DataFrame containing the data.
+        case_id_name (str): The name of the column to be removed that contains case IDs.
+        outcome_name (str): The name of the column that contains the target variable.
+        columns_to_remove (list of str, optional): A list of additional column names to be removed. Defaults to None.
+    
+    Returns:
+        tuple: A tuple containing two elements:
+            - X (pandas.DataFrame): The DataFrame containing the features.
+            - y (pandas.Series): The Series containing the target variable.
     """
     # Before training for ml we need to remove columns that can are not needed for ML model.
     df = df.drop([case_id_name], axis="columns")
@@ -26,7 +37,11 @@ def prepare_df_for_ml(df, case_id_name, outcome_name, columns_to_remove=None):
     y = df[outcome_name]
     return X, y
 
-def train_ml_model(train_data, test_data, case_id_name, outcome_name, columns_to_remove, continuous_features, categorical_features, learning_rate, depth, n_iterations, data_name):
+def train_ml_model(train_data, test_data, case_id_name, outcome_name, columns_to_remove, continuous_features, categorical_features, learning_rate, depth, n_iterations, case_study):
+    """
+    Trains a CatBoostRegressor for predicting total execution time.
+    """
+
     X_train, y_train = prepare_df_for_ml(train_data, case_id_name, outcome_name, columns_to_remove)
     X_test, y_test = prepare_df_for_ml(test_data, case_id_name, outcome_name, columns_to_remove)
 
@@ -69,5 +84,5 @@ def train_ml_model(train_data, test_data, case_id_name, outcome_name, columns_to
     print('Mean Absolute Error: {} hours'.format(mae*SECONDS_TO_HOURS))
     print('Mean Absolute Error: {} days'.format(mae*SECONDS_TO_DAYS))
 
-    joblib.dump(catboost_pipeline, './catboost_time_' + data_name + '.joblib') # Save models
+    joblib.dump(catboost_pipeline, './catboost_time_' + case_study + '.joblib') # Save models
 

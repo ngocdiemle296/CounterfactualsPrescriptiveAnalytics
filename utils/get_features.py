@@ -1,4 +1,14 @@
 def get_features(case_study):
+    """
+    Returns the features for the given case study.
+
+    Parameters:
+    case_study (str): The case study identifier.
+
+    Returns:
+    tuple: A tuple containing the case ID name, activity column name, resource column name, 
+           continuous features, start date name, and end date name.
+    """
     if case_study == "bac":
         continuous_features = ['time_from_start', 'time_from_previous_event(start)', 'time_from_midnight', 'activity_duration', 
                                '# ACTIVITY=Service closure Request with network responsibility', 

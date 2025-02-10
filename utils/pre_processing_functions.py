@@ -10,14 +10,25 @@ import seaborn as sns
 import tqdm
 import pickle
 
-def getting_total_time(dataframe, case_id_name, start_date_name): # DIEM ADDED
+def getting_total_time(dataframe, case_id_name, start_date_name): 
+    """
+    Calculate the total execution time for each case in the dataframe.
+    
+    Parameters:
+        dataframe (pd.DataFrame): The input dataframe containing event log data.
+        case_id_name (str): The name of the column representing the case ID.
+        start_date_name (str): The name of the column representing the start date of events.
+    
+    Returns:
+        pd.DataFrame: The dataframe with an additional column 'leadtime' representing the total execution time for each case in seconds.
+    """
+
     dataframe["leadtime"] = ""
     
     list_trace_id = set(dataframe[case_id_name].unique()) # Getting list of trace ID
     for trace_id in list_trace_id:
         sub_trace_df = dataframe[dataframe[case_id_name] == trace_id] # Getting sub df for each trace
         sub_trace_df1 = sub_trace_df.copy()
-        # sub_trace_df1[start_date_name] = [parser.parse(i) for i in sub_trace_df[start_date_name]] # Convert to datetime format
         sub_trace_df_sorted = sub_trace_df1.sort_values(by=[start_date_name]) # Sorting by time
         
         indexes = sub_trace_df_sorted.index.values.tolist()
@@ -31,8 +42,21 @@ def getting_total_time(dataframe, case_id_name, start_date_name): # DIEM ADDED
             
     return dataframe
 
-# Function for adding next activity and next resource in train dataset
-def add_next_act_res(df, activity_column_name, resource_column_name, case_id_name): # DIEM ADDED
+def add_next_act_res(df, activity_column_name, resource_column_name, case_id_name): 
+    """
+    Adds columns for the next activity and next resource to the dataframe for each case.
+    
+    Parameters:
+        df (pandas.DataFrame): The input dataframe containing the event log.
+        activity_column_name (str): The name of the column containing activity names.
+        resource_column_name (str): The name of the column containing resource names.
+        case_id_name (str): The name of the column containing case IDs.
+    
+    Returns:
+        pandas.DataFrame: The dataframe with two new columns 'NEXT_ACTIVITY' and 'NEXT_RESOURCE' 
+                        indicating the next activity and resource for each event in the case.
+    """
+
     list_unique_id = df[case_id_name].unique() # Extracting list of cases
     idx = 0
     df['NEXT_ACTIVITY'] = ""
@@ -50,7 +74,22 @@ def add_next_act_res(df, activity_column_name, resource_column_name, case_id_nam
             idx = idx +1
     return df
 
-def preprocessing_activity_frequency(dataframe, activity_column_name, case_id_name, start_date_name):  #DIEM ADDED
+def preprocessing_activity_frequency(dataframe, activity_column_name, case_id_name, start_date_name):  
+    """
+    Preprocesses the given dataframe to calculate the frequency of each activity for each case.
+    This function adds new columns to the dataframe, where each column represents the frequency of a specific activity 
+    up to the current event in the trace. The columns are named in the format '# ACTIVITY=<activity_name>'.
+    
+    Parameters:
+        dataframe (pd.DataFrame): The input dataframe containing event log data.
+        activity_column_name (str): The name of the column containing activity names.
+        case_id_name (str): The name of the column containing case IDs.
+        start_date_name (str): The name of the column containing the start date of the events.
+    
+    Returns:
+        pd.DataFrame: The modified dataframe with additional columns for activity frequencies.
+    """
+
     list_activities = set(dataframe[activity_column_name].unique()) # Getting list of activities
     list_trace_id = set(dataframe[case_id_name].unique()) # Getting list of trace ID
 
@@ -61,7 +100,6 @@ def preprocessing_activity_frequency(dataframe, activity_column_name, case_id_na
     for trace_id in list_trace_id:
         sub_trace_df = dataframe[dataframe[case_id_name] == trace_id] # Getting sub df for each trace
         sub_trace_df1 = sub_trace_df.copy()
-        # sub_trace_df1[start_date_name] = [parser.parse(i) for i in sub_trace_df[start_date_name]] # Convert to datetime format
         sub_trace_df_sorted = sub_trace_df1.sort_values(by=[start_date_name]) # Sorting by time
 
         indexes = sub_trace_df_sorted.index.values.tolist()
@@ -90,8 +128,7 @@ def get_split_indexes(df, case_id_name, start_date_name, train_size=float):
         start_end_couple.append([idx, df_[start_date_name].values[0], df_[start_date_name].values[len(df_) - 1]])
     start_end_couple = pd.DataFrame(start_end_couple, columns=['idx', 'start', 'end'])
     print(f'The min max range is {start_end_couple.start.min()}, {start_end_couple.end.max()}')
-    # print(f'With length {start_end_couple.end.max() - start_end_couple.start.min()}')
-
+    
     # Initialize pdf of active cases and cdf of closed cases
     times_dict_pdf = dict()
     times_dict_cdf = dict()
