@@ -4,13 +4,14 @@ This repository contains the implementation of the counterfactual-based framewor
 
 ## Abstract
 Prescriptive process analytics aims to provide actionable recommendations for process instances that are predicted to fall short of achieving satisfactory outcomes.
-These recommendations typically focus on assigning activities to specific resources. Given that processes may involve hundreds of resources, and hence brute-force approaches to evaluate all possible activity-resource combinations are computationally infeasible.
+These recommendations typically focus on assigning activities to specific resources. Given that processes may involve hundreds of resources, brute-force approaches for evaluating all possible activity-resource combinations are computationally infeasible.
 Current state-of-the-art techniques conversely adopt a sequential approach that selects the most suitable activity and then allocates it to one of the suitable resources: this is inherently sub-optimal.
-This paper leverages counterfactual generation techniques to formulate recommendations. Counterfactual-based methods offer innovative strategies that efficiently converge to highly effective interventions. Experimental evaluations conducted on several real-life datasets demonstrate that our counterfactual-based technique outperforms a baseline approach in which the best activity is chosen and then assigned to one of the suitable resources.
+This paper leverages counterfactual generation techniques to formulate recommendations. Counterfactual-based methods offer innovative strategies that efficiently converge to highly effective interventions. 
+Experimental evaluations conducted on several real-life case studies demonstrate that our counterfactual-based technique outperforms a baseline approach that follows a sequential activity-to-resource assignment strategy.
 
 
 ## Framework
-<img width="1023" alt="Counterfactuals_frameworks_" src="https://github.com/user-attachments/assets/1ca91681-f755-4724-855d-9673c8ce1038" />
+![Counterfactuals_framework](https://github.com/user-attachments/assets/708a5016-df98-44ad-a23e-43133eba83d7)
 
 
 ## Installation
