@@ -11,7 +11,7 @@ Experimental evaluations conducted on several real-life case studies demonstrate
 
 
 ## Framework
-![Counterfactuals_framework](https://github.com/user-attachments/assets/708a5016-df98-44ad-a23e-43133eba83d7)
+<img width="862" alt="Counterfactuals_framework" src="https://github.com/user-attachments/assets/077af22d-e1b7-4bf1-81c3-b950e1bfae58" />
 
 
 ## Installation
